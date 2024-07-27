@@ -6,7 +6,7 @@ rotors = {
     "5": "[17, 11, 8, 14, 23, 24, 12, 3, 10, 6, 5, 2, 19, 13, 25, 21, 20, 1, 9, 16, 4, 15, 18, 7, 26, 22]"
 }
 
-def initialiser(rotor_num, start_num):
+def initialiser(start_num):
     rotor = []
     # Fill rotor with digits from start_num to 26
     for i in range(27-int(start_num)):
@@ -22,14 +22,14 @@ def initialiser(rotor_num, start_num):
 
 
 def main():
-    rotor_num = int(input("Number of rotors: "))
-    rotors = {}
-    for rotor in range(rotor_num):
-        start_num = int(input("Starting number: "))
-        rotors[rotor] = initialiser(start_num)
-        
-    for i in rotors:
-        print(rotors[i])
+    rotor_num = int(input("Which rotor: "))
+    counterpart = rotors[str(rotor_num)]
+    
+    start_num = int(input("Starting number: "))
+    rotor_in_order = initialiser(start_num)      
+    print(rotor_in_order)
+    print(counterpart)
+
 
 
 main()
