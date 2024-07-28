@@ -11,6 +11,7 @@ counterparts = {
 
 
 def initialiser(rotor_num, start_num):
+    """Initialise a rotor and its counterpart"""
     rotor = []
     # Fill rotor with digits from start_num to 26
     for i in range(27-int(start_num)):
@@ -33,18 +34,45 @@ def initialiser(rotor_num, start_num):
     return initialised
     
     
+def change_number(rotor_num, num):
+    """Change a number through a rotor"""
+    rotor_index = rotor_base.index(num)
+    counterpart_num = counterparts[rotor_num][rotor_index]
+    return counterpart_num
+
 
 
 def main():
-    # Get user input
-    rotor_num = int(input("Which rotor: "))    
-    start_num = int(input("Starting number: "))
+    # Starting number (letter A)
+    start_num = 1
+    # Initialise rotors
+    r1_rotor = 1
+    r1_start = 5
+    r2_rotor = 2
+    r2_start = 7
+    r3_rotor = 3
+    r3_start = 9
 
-    # Get rotor and counterpart combination
-    initialised = initialiser(rotor_num, start_num)      
+    r1 = initialiser(r1_rotor, r1_start)
+    r2 = initialiser(r2_rotor, r2_start)
+    r3 = initialiser(r3_rotor, r3_start)
 
-    print(initialised["rotor"])
-    print(initialised["counterpart"])
+    # print(r1["rotor"])
+    # print(r1["counterpart"])
+    # print(r2["rotor"])
+    # print(r2["counterpart"])
+    # print(r3["rotor"])
+    # print(r3["counterpart"])
+
+    index = r1["rotor"].index(start_num)
+    r1_counterpart = r1["counterpart"][index]
+    r2_counterpart = r2["counterpart"][index]
+    r3_counterpart = r3["counterpart"][index]
+
+
+
+
+    
 
 
 
