@@ -1,6 +1,8 @@
+import rotors
+
 rotor_base = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]
 
-def initialiser(rotor_num, start_num):
+def initialiser(start_num):
     """Initialise a rotor and its counterpart"""
     rotor = []
     # Fill rotor with digits from start_num to 26
@@ -11,47 +13,43 @@ def initialiser(rotor_num, start_num):
         for i in range(start_num-1):
             rotor.append(i+1)
 
-    # Counterpart to rotor (changing of value)
-    counterpart = []
-    for num in rotor:
-        # Append corresponding counterpart to number
-        counterpart.append(counterparts[rotor_num][rotor_base.index(num)])
-
-    initialised = {
-        "rotor": rotor,
-        "counterpart": counterpart
-    }
-    return initialised
+    return rotor
     
     
 def change_number(rotor_num, num):
-    """Change a number through a rotor"""
-    rotor_index = rotor_base.index(num)
-    counterpart_num = counterparts[rotor_num][rotor_index]
-    return counterpart_num
+    """Change a number inside a rotor"""
+    changed_number = rotors.rotor_num[num]
+    return changed_number
 
 
+def encrypt_number(r1, r1_rotor, r2, r2_rotor, r3, r3_rotor, start_num):
+    """Encrypt a letter using rotors and reflector"""
+    r1_new_index = r1.index(rotors.rotor1[start_num])
+    r2_num = r2[r1_new_index]
+    r2_new_index = r2.index(rotors.rotor2[r2_num])
+    r3_num = r3[r2_new_index]
+    r3_new_index = r3.index(rotors.rotor3[r3_num])
+    r2_second_num = r2[r3_new_index]
+    r2_second_new_index = r2.index(rotors.rotor2[r2_second_num])
+    r1_second_num = r1[r2_second_new_index]
+    r1_second_new_index = r1.index(rotors.rotor1[r1_second_num])
+
+    encrypted_num = r1[r1_second_new_index]
+
+    return encrypted_num
 
 def main():
     # Starting number (letter A)
     start_num = 1
-    # Initialise rotors
-    r1_rotor = 1
-    r1_start = 5
-    r2_rotor = 2
-    r2_start = 7
-    r3_rotor = 3
-    r3_start = 9
+    r1 = initialiser(1)
+    r2 = initialiser(13)
+    r3 = initialiser(22)
+    encyrpted = encrypt_number(r1, rotors.rotor1, r2, rotors.rotor2, r3, rotors.rotor3, start_num)
 
-    r1 = initialiser(r1_rotor, r1_start)
-    r2 = initialiser(r2_rotor, r2_start)
-    r3 = initialiser(r3_rotor, r3_start)
-
-
-
-
-
-    
+    # print(encyrpted)
+    print(r1)
+    print(r2)
+    print(r3)
 
 
 
