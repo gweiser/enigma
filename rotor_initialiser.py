@@ -1,6 +1,10 @@
-import rotors
+import rotors # type: ignore
 
 rotor_base = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]
+
+r1_rotor = rotors.rotor1
+r2_rotor = rotors.rotor2
+r3_rotor = rotors.rotor3
 
 def initialiser(start_num):
     """Initialise a rotor and its counterpart"""
@@ -22,17 +26,17 @@ def change_number(rotor_num, num):
     return changed_number
 
 
-def encrypt_number(r1, r1_rotor, r2, r2_rotor, r3, r3_rotor, start_num):
+def encrypt_number(r1, r2, r3, start_num):
     """Encrypt a letter using rotors and reflector"""
-    r1_new_index = r1.index(rotors.rotor1[start_num])
+    r1_new_index = r1.index(r1_rotor[start_num])
     r2_num = r2[r1_new_index]
-    r2_new_index = r2.index(rotors.rotor2[r2_num])
+    r2_new_index = r2.index(r2_rotor[r2_num])
     r3_num = r3[r2_new_index]
-    r3_new_index = r3.index(rotors.rotor3[r3_num])
+    r3_new_index = r3.index(r3_rotor[r3_num])
     r2_second_num = r2[r3_new_index]
-    r2_second_new_index = r2.index(rotors.rotor2[r2_second_num])
+    r2_second_new_index = r2.index(r2_rotor[r2_second_num])
     r1_second_num = r1[r2_second_new_index]
-    r1_second_new_index = r1.index(rotors.rotor1[r1_second_num])
+    r1_second_new_index = r1.index(r1_rotor[r1_second_num])
 
     encrypted_num = r1[r1_second_new_index]
 
@@ -44,12 +48,12 @@ def main():
     r1 = initialiser(1)
     r2 = initialiser(13)
     r3 = initialiser(22)
-    encyrpted = encrypt_number(r1, rotors.rotor1, r2, rotors.rotor2, r3, rotors.rotor3, start_num)
+    encyrpted = encrypt_number(r1, r2, r3, start_num)
 
-    # print(encyrpted)
-    print(r1)
-    print(r2)
-    print(r3)
+    print(encyrpted)
+    # print(r1)
+    # print(r2)
+    # print(r3)
 
 
 
