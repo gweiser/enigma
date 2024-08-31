@@ -1,13 +1,15 @@
 import rotors # type: ignore
 
+# Initialise lists for base rotor and alphabet
 rotor_base = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]
-
 alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
 
+# Initialise 3 rotors and reflector
 r1_rotor = rotors.rotor1
 r2_rotor = rotors.rotor2
 r3_rotor = rotors.rotor3
 reflector = rotors.reflector
+
 
 def initialiser(start_num):
     """Initialise a rotor and its counterpart"""
@@ -56,14 +58,24 @@ def encrypt_number(r1, r2, r3, start_num):
 
     return encrypted_num
 
-def main():
 
-    # Initialise 3 rotors
-    r1 = initialiser(1)
-    r2 = initialiser(13)
-    r3 = initialiser(22)
+def main():
+    """Main script"""
+    # Starting numbers for each rotor
+    r1_startnum = 1
+    r2_startnum = 13
+    r3_startnum = 22
+    # Initialise keypress and rotation counters
+    keypresses = 0
+    r1_rotations = 0
+    r2_rotations = 0
+
 
     while True:
+        # Initialise 3 rotors
+        r1 = initialiser(r1_startnum+keypresses)
+        r2 = initialiser(r2_startnum+r1_rotations)
+        r3 = initialiser(r3_startnum+r2_rotations)
         # Get plaintext letter
         plaintext_letter = input("Input: ").upper()
         # Get letter's number
@@ -73,12 +85,21 @@ def main():
         # Get encrpyted letter
         encyrpted_letter = alphabet[encyrpted_num-1]
 
-        print(encyrpted_letter)
+        # Rotate rotors depending on value of keypresses
+        keypresses += 1
+        if keypresses == 26:
+            keypresses = 0
+            r1_rotations += 1
+        if r1_rotations == 26:
+            r1_rotations = 0
+            r2_rotations += 1
+        if r2_rotations == 26:
+            r2_rotations = 0
 
-    print(encyrpted)
-    # print(r1)
-    # print(r2)
-    # print(r3)
+        print(encyrpted_letter)
+        print(r1)
+        print(r2)
+        print(r3)
 
 
 
