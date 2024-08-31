@@ -2,6 +2,8 @@ import rotors # type: ignore
 
 rotor_base = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]
 
+alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
+
 r1_rotor = rotors.rotor1
 r2_rotor = rotors.rotor2
 r3_rotor = rotors.rotor3
@@ -19,12 +21,6 @@ def initialiser(start_num):
             rotor.append(i+1)
 
     return rotor
-    
-    
-def change_number(rotor_num, num):
-    """Change a number inside a rotor"""
-    changed_number = rotors.rotor_num[num]
-    return changed_number
 
 
 def encrypt_number(r1, r2, r3, start_num):
@@ -61,12 +57,23 @@ def encrypt_number(r1, r2, r3, start_num):
     return encrypted_num
 
 def main():
-    # Starting number (letter A)
-    start_num = 1
+
+    # Initialise 3 rotors
     r1 = initialiser(1)
     r2 = initialiser(13)
     r3 = initialiser(22)
-    encyrpted = encrypt_number(r1, r2, r3, start_num)
+
+    while True:
+        # Get plaintext letter
+        plaintext_letter = input("Input: ").upper()
+        # Get letter's number
+        plaintext_num = alphabet.index(plaintext_letter) + 1
+        # Encrypt number 
+        encyrpted_num = encrypt_number(r1, r2, r3, plaintext_num)
+        # Get encrpyted letter
+        encyrpted_letter = alphabet[encyrpted_num-1]
+
+        print(encyrpted_letter)
 
     print(encyrpted)
     # print(r1)
