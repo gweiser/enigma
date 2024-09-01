@@ -87,9 +87,11 @@ def main():
 
         # Rotate rotors depending on value of keypresses
         keypresses += 1
+        # When rotor 1 has completed full revolution (26 keypresses)
         if keypresses == 26:
             keypresses = 0
             r1_rotations += 1
+        # When rotor 2 has completed full revolution (26 rotations of r1, 676 keypresses)
         if r1_rotations == 26:
             r1_rotations = 0
             r2_rotations += 1
@@ -97,9 +99,9 @@ def main():
             r2_rotations = 0
 
         print(encyrpted_letter)
-        print(r1)
-        print(r2)
-        print(r3)
+        # print(r1)
+        # print(r2)
+        # print(r3)
 
 
 
