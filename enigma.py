@@ -61,10 +61,16 @@ def encrypt_number(r1, r2, r3, start_num):
 
 def main():
     """Main script"""
+    
     # Starting numbers for each rotor
-    r1_startnum = 1
-    r2_startnum = 13
-    r3_startnum = 22
+    # r1_startnum = 1
+    # r2_startnum = 13
+    # r3_startnum = 22
+
+    # Get starting numbers
+    r1_startnum = int(input("Rotor 1 start num: "))
+    r2_startnum = int(input("Rotor 2 start num: "))
+    r3_startnum = int(input("Rotor 3 start num: "))
     # Initialise keypress and rotation counters
     keypresses = 0
     r1_rotations = 0
