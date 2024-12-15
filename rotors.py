@@ -1,4 +1,4 @@
-"""All 5 rotors, hard coded as on original"""
+"""All 5 rotors and reflector, hard coded as on original"""
 
 rotor1 = {
     1: 12,
