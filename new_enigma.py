@@ -13,6 +13,7 @@ all_rotors = [
 
 def rotor_selection():
     """Choose three rotors"""
+
     rotors = []
     for i in range(0, 3):
         rotor_i = input(f"Rotor {i+1}: ")
@@ -23,11 +24,18 @@ def rotor_selection():
 
 
 
-def initialise_rotor_position():
-    # TODO
+def initialise_rotor_position(rotor, position):
     """Bring rotor into the desired starting position"""
-    ...
-    # Start list with letter corresponding to starter position (01 = A) and fill up rest oflist with remaining characters, wrap at Z
+
+    rotor = all_rotors[rotor-1]
+    starting_letter_index = rotor.index(position)
+    
+    # Split list at starting letter, then append new list end (wrapping around)
+    list_beginning = rotor[starting_letter_index:len(rotor)]
+    list_end = rotor[0:starting_letter_index]
+    new_rotor = list_beginning + list_end
+ 
+    return new_rotor
 
 
 def initialise_rotor_ring():
@@ -37,11 +45,11 @@ def initialise_rotor_ring():
     # ?
 
 
-def rotate_rotor():
+def rotate_rotor(rotor):
     # TODO
     """Rotate the rotors (change order of letters in list)"""
-    ...
     # Rotate rotor 3 --> if rotor 3 is at its turnover position --> rotate rotor 2 --> if rotor 2 is at its turnover position --> rotate rotor 1
+    ...
 
 
 
@@ -74,4 +82,5 @@ def encrypt(rotors_selected, starting_letter):
 
 
 
-encrypt([1, 2, 3], input("Starting letter: ").upper())
+# encrypt([1, 2, 3], input("Starting letter: ").upper())
+# initialise_rotor_position(5, "Ws")
