@@ -46,15 +46,15 @@ all_rotors = [
 def initialise_rotor_position(rotor, position):
     """Bring rotor into the desired starting position"""
 
-    rotor = all_rotors[rotor]
-    starting_letter_index = rotor.index(position)
+    # Get letter at index of desired position
+    starting_letter_index = rotor[position-1]
     
     # Split list at starting letter, then append new list end (wrapping around)
     list_beginning = rotor[starting_letter_index:len(rotor)]
     list_end = rotor[0:starting_letter_index]
-    new_rotor = list_beginning + list_end
+    rotor = list_beginning + list_end
  
-    return new_rotor
+    return 
 
 
 
@@ -90,11 +90,11 @@ def rotate_rotors():
     return
 
 
-def encrypt(starting_letter):
+def encrypt(starting_position):
     """Encrypt input letters through same method as original Enigma (without plugboard)"""
-    
+
     # Get the letter on each rotor at the alphabet's index of the previous letter
-    rotor_3_letter = rotor_3["rotor"][alphabet.index(starting_letter)]
+    rotor_3_letter = rotor_3["rotor"][starting_position-1]
     # print(rotor_3_letter)
     rotor_2_letter = rotor_2["rotor"][alphabet.index(rotor_3_letter)]
     # print(rotor_2_letter)
@@ -120,7 +120,23 @@ def main():
     rotor_1 = all_rotors[0]
     rotor_2 = all_rotors[1]
     rotor_3 = all_rotors[2]
-    
 
-    rotate_rotors()
+    # Initialise ring settings
+    # TODO
+
+    # Get starter positions
+    rotor_1_starter = input("Rotor 1 starter position: ")
+    initialise_rotor_position(rotor_1, rotor_1_starter)
+    rotor_2_starter = input("Rotor 2 starter position: ")
+    initialise_rotor_position(rotor_2, rotor_2_starter)
+    rotor_3_starter = input("Rotor 3 starter position: ")   
+    initialise_rotor_position(rotor_3, rotor_3_starter)
+
+    # Initialise rotors with starter positions
+    # TODO   
+
+    # Main encryption loop, runs as long as power on
+    # TODO
+
+
 main()
