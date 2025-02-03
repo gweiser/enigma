@@ -66,25 +66,27 @@ def initialise_rotor_ring():
 
 
 
-def rotate_rotor():
-    # TODO
+def rotate_rotors():
     """Rotate the rotors (change order of letters in list)"""
 
     # If rotor 3 is not at its turnover position
     if rotor_3["rotor"][0] != rotor_3["turnover"]:
-        #>> rotate rotor 3
-        ...
+        # Just rotate rotor 3 --> "Rotate" rotor 3 by appending index 0 to end of list
+        rotor_3["rotor"].append(rotor_3["rotor"][0])
+        rotor_3["rotor"].pop(0)
     # If rotor 3 is at its turnover position
     elif rotor_3["rotor"][0] == rotor_3["turnover"]:
-        #>> rotate rotor 3
-        ...
+        # "Rotate" rotor 3 by appending index 0 to end of list
+        rotor_3["rotor"].append(rotor_3["rotor"][0])
+        rotor_3["rotor"].pop(0)
         # If rotor 2 is at its turnover position
         if rotor_2["rotor"][0] == rotor_2["turnover"]:
-            #>> rotate rotor 1
-            ...
-        #>> rotate rotor 2
-        ...
-
+            # Rotate" rotor 1 by appending index 0 to end of list
+            rotor_1["rotor"].append(rotor_1["rotor"][0])
+            rotor_1["rotor"].pop(0)
+        # Rotate" rotor 2 by appending index 0 to end of list
+        rotor_2["rotor"].append(rotor_2["rotor"][0])
+        rotor_2["rotor"].pop(0)
     return
 
 
@@ -119,7 +121,6 @@ def main():
     rotor_2 = all_rotors[1]
     rotor_3 = all_rotors[2]
     
-    encrypt("A")
 
-
+    rotate_rotors()
 main()
