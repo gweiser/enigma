@@ -103,6 +103,7 @@ def encrypt(starting_position):
     rotor_2_reversed_letter = alphabet[rotor_2["rotor"].index(rotor_1_reversed_letter)]
     # print(rotor_2_reversed_letter)
     final_letter = alphabet[rotor_3["rotor"].index(rotor_2_reversed_letter)]
+
     print(final_letter)
 
 
@@ -122,16 +123,23 @@ def main():
 
     # Get starter positions
     rotor_1_starter = int(input("Rotor 1 starter position: "))
-    initialise_rotor_position(rotor_1, rotor_1_starter)
     rotor_2_starter = int(input("Rotor 2 starter position: "))
+    rotor_3_starter = int(input("Rotor 3 starter position: "))
+
+    # Initialise rotors using starter positions
+    initialise_rotor_position(rotor_1, rotor_1_starter)
     initialise_rotor_position(rotor_2, rotor_2_starter)
-    rotor_3_starter = int(input("Rotor 3 starter position: ")   )
     initialise_rotor_position(rotor_3, rotor_3_starter)
 
-    # Main encryption loop, runs as long as power on
-    # TODO
 
-    encrypt("1  ")
+    # Main encryption loop, runs as long as power on
+    while True:
+        # Get letter to encrypt
+        letter = alphabet.index(input("Letter to encrypt: ")) + 1
+        # Encrypt letter (and print it out)
+        encrypt(letter)
+        # Rotate rotors to new position
+        rotate_rotors()
 
 
 main()
