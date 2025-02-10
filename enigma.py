@@ -1,114 +1,113 @@
-import rotors # type: ignore
+"""Enigma I Emulation (Without Plugboard)"""
 
-# Initialise lists for base rotor and alphabet
-rotor_base = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]
-alphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
+# Alphabet reference
+alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-# Initialise 3 rotors and reflector
-r1_rotor = rotors.rotor1
-r2_rotor = rotors.rotor2
-r3_rotor = rotors.rotor3
-reflector = rotors.reflector
+# Reflectors
+reflector_b = "YRUHQSLDPXNGOKMIEBFZCWVJAT"
 
+# Rotor configurations
+all_rotors = [
+    {
+        "rotor": "EKMFLGDQVZNTOWYHXUSPAIBRCJ",
+        "turnover": "Q"
+    },
+    {
+        "rotor": "AJDKSIRUXBLHWTMCQGZNPYFVOE",
+        "turnover": "E"
+    },
+    {
+        "rotor": "BDFHJLCPRTXVZNYEIWGAKMUSQO",
+        "turnover": "V"
+    },
+    {
+        "rotor": "ESOVPZJAYQUIRHXLNFTGKDCMWB",
+        "turnover": "J"
+    },
+    {
+        "rotor": "VZBRGITYUPSDNHLXAWMJQOFECK",
+        "turnover": "Z"
+    }
+]
 
-def initialiser(start_num):
-    """Initialise a rotor and its counterpart"""
-    rotor = []
-    # Fill rotor with digits from start_num to 26
-    for i in range(27-int(start_num)):
-        rotor.append(i+start_num)
-    # Fill up rest of rotor
-    if len(rotor) < 26:
-        for i in range(start_num-1):
-            rotor.append(i+1)
-
-    return rotor
-
-
-def encrypt_number(r1, r2, r3, start_num):
-    """Encrypt a letter using rotors and reflector"""
-    # Get index of changed number in rotor1
-    r1_new_index = r1.index(r1_rotor[start_num])
-    # Get new number on rotor2 (at index of rotor1)
-    r2_num = r2[r1_new_index]
-    # Get index of changed number in rotor2
-    r2_new_index = r2.index(r2_rotor[r2_num])
-    # Get new number on rotor3
-    r3_num = r3[r2_new_index]
-    # Get index of changed number in rotor3
-    r3_new_index = r3.index(r3_rotor[r3_num])
-    # Get new number on reflector (at index of rotor3)
-    reflector_num = rotor_base[r3_new_index]
-    # Get index of changed number on reflector
-    reflector_new_index = rotor_base.index(reflector[reflector_num])
-    # Get new number on rotor3 (at index of reflector)
-    r3_second_num = r3[reflector_new_index]
-    # Get index of new number on rotor3
-    r3_second_new_index = r3.index(r3_rotor[r3_second_num])
-    # Get new number on rotor2 (At index of rotor3)
-    r2_second_num = r2[r3_second_new_index]
-    # Get index of changed number on rotor2
-    r2_second_new_index = r2.index(r2_rotor[r2_second_num])
-    # Get new number on rotor1 (at index of rotor2)
-    r1_second_num = r1[r2_second_new_index]
-    # Get index of encrypted number on rotor1
-    r1_second_new_index = r1.index(r1_rotor[r1_second_num])
-    # Encrypted number
-    encrypted_num = r1[r1_second_new_index]
-
-    return encrypted_num
+def initialise_rotor_position(rotor, position):
+    """Rotate rotor to the correct starting position"""
+    shift = position - 1  # Convert to zero-based index
+    rotor["rotor"] = rotor["rotor"][shift:] + rotor["rotor"][:shift] 
 
 
+def initialise_ring_setting(rotor):
+    """Initialise rotor's ring setting"""
+    # TODO
+    ...
+
+def rotate_rotors():
+    """Simulate rotor stepping mechanism"""
+
+    global rotor_1, rotor_2, rotor_3
+
+    # Step rotor 3 with every keypress
+    rotor_3["rotor"] = rotor_3["rotor"][1:] + rotor_3["rotor"][:1]
+
+    # If rotor 3 hits its turnover position, rotate rotor 2
+    if rotor_3["rotor"][0] == rotor_3["turnover"]:
+        rotor_2["rotor"] = rotor_2["rotor"][1:] + rotor_2["rotor"][:1]
+
+        # If rotor 2 also hits its turnover position, rotate rotor 1
+        if rotor_2["rotor"][0] == rotor_2["turnover"]:
+            rotor_1["rotor"] = rotor_1["rotor"][1:] + rotor_1["rotor"][:1]
+
+
+def encrypt(letter):
+    """Encrypt a single letter"""
+
+    index = alphabet.index(letter)  # Convert letter to index
+
+    # Forward through rotors
+    letter = rotor_3["rotor"][index]
+    letter = rotor_2["rotor"][alphabet.index(letter)]
+    letter = rotor_1["rotor"][alphabet.index(letter)]
+
+    # Reflector
+    letter = reflector_b[alphabet.index(letter)]
+
+    # Backward through rotors
+    letter = alphabet[rotor_1["rotor"].index(letter)]
+    letter = alphabet[rotor_2["rotor"].index(letter)]
+    letter = alphabet[rotor_3["rotor"].index(letter)]
+
+    # Rotate rotors after each key press
+    rotate_rotors()
+
+    return letter
+
+
+# Main function
 def main():
-    """Main script"""
-    
-    # Starting numbers for each rotor
-    # r1_startnum = 1
-    # r2_startnum = 13
-    # r3_startnum = 22
+    global rotor_1, rotor_2, rotor_3
 
-    # Get starting numbers
-    r1_startnum = int(input("Rotor 1 start num: "))
-    r2_startnum = int(input("Rotor 2 start num: "))
-    r3_startnum = int(input("Rotor 3 start num: "))
-    # Initialise keypress and rotation counters
-    keypresses = 0
-    r1_rotations = 0
-    r2_rotations = 0
+    # Choose rotors to use
+    rotor_1 = all_rotors[0]
+    rotor_2 = all_rotors[1]
+    rotor_3 = all_rotors[2]
 
+    # Get starter positions
+    rotor_1_starter = int(input("Rotor 1 starter position: "))
+    rotor_2_starter = int(input("Rotor 2 starter position: "))
+    rotor_3_starter = int(input("Rotor 3 starter position: "))
 
+    # Set rotors to correct positions
+    initialise_rotor_position(rotor_1, rotor_1_starter)
+    initialise_rotor_position(rotor_2, rotor_2_starter)
+    initialise_rotor_position(rotor_3, rotor_3_starter)
+
+    # Main encryption loop
     while True:
-        # Initialise 3 rotors
-        r1 = initialiser(r1_startnum+keypresses)
-        r2 = initialiser(r2_startnum+r1_rotations)
-        r3 = initialiser(r3_startnum+r2_rotations)
-        # Get plaintext letter
-        plaintext_letter = input("Input: ").upper()
-        # Get letter's number
-        plaintext_num = alphabet.index(plaintext_letter) + 1
-        # Encrypt number 
-        encyrpted_num = encrypt_number(r1, r2, r3, plaintext_num)
-        # Get encrpyted letter
-        encyrpted_letter = alphabet[encyrpted_num-1]
+        # Get letter to encrypt
+        letter = input("Letter to encrypt: ").upper()
+        # Encrypt letter
+        encrypted_letter = encrypt(letter)
+        print(f"Encrypted letter: {encrypted_letter}")
 
-        # Rotate rotors depending on value of keypresses
-        keypresses += 1
-        # When rotor 1 has completed full revolution (26 keypresses)
-        if keypresses == 26:
-            keypresses = 0
-            r1_rotations += 1
-        # When rotor 2 has completed full revolution (26 rotations of r1, 676 keypresses)
-        if r1_rotations == 26:
-            r1_rotations = 0
-            r2_rotations += 1
-        if r2_rotations == 26:
-            r2_rotations = 0
-
-        print(encyrpted_letter)
-        # print(r1)
-        # print(r2)
-        # print(r3)
-
-
-
+# Run the main function
 main()
