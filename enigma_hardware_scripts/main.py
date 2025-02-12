@@ -2,7 +2,7 @@ from time import sleep_ms, sleep
 from machine import I2C, Pin  # type: ignore
 from sx1509 import Expander, PinModes, HIGH, LOW
 from pico_i2c_lcd import I2cLcd
-from enigma_encryption import initialise_rotor_position, initialise_ring_setting, encrypt, all_rotors, alphabet
+from enigma_encryption import initialise_rotor_position, initialise_ring_setting, encrypt, all_rotors, alphabet, result
 
 # Initialise I2C
 i2c = I2C(0, freq=400000, scl=Pin(17), sda=Pin(16))
@@ -162,33 +162,6 @@ def starter_positions_selection():
         # Change rotor allocation on keypress, only change to rotor not already in use
         for button in buttons:
             if button.value() == 0:
-                
-            #  if (starter_positions[buttons.index(button)] + 1) not in starter_positions:
-            #     starter_positions[buttons.index(button)] += 1
-                
-            #     if starter_positions[buttons.index(button)] > 5:
-            #      starter_positions[buttons.index(button)] = 0
-                 
-            #     while starter_positions.count(starter_positions[buttons.index(button)]) > 1:
-            #      starter_positions[buttons.index(button)] += 1
-                 
-            #      if starter_positions[buttons.index(button)] > 5:
-            #          starter_positions[buttons.index(button)] = 0
-                     
-            #      if starter_positions.count(starter_positions[buttons.index(button)]) == 1:
-            #          break
-                      
-            #  else:
-            #     starter_positions[buttons.index(button)] += 1
-            #     while starter_positions.count(starter_positions[buttons.index(button)]) > 1:             
-            #          starter_positions[buttons.index(button)] += 1
-                     
-            #          if starter_positions[buttons.index(button)] > 5:
-            #              starter_positions[buttons.index(button)] = 0
-            #              break
-                        
-            #          if starter_positions.count(starter_positions[buttons.index(button)]) == 1:
-            #              break
                 starter_positions[buttons.index(button)] += 1
                 if starter_positions[buttons.index(button)] > 5:
                     starter_positions[buttons.index(button)] = 0
@@ -223,21 +196,23 @@ def detect_keypress():
         return key
          
     elif key_26.value() == 0:
-        key = 26
+        key = 25
         return key
     
     sleep_ms(500)
     return "Empty"
-    #keyboard_expander.reset()
+
 
 def illuminate_lampboard(letter):
     """Illuminate a letter on the lampboard"""
     sleep_ms(100)
+    # If SX1509 number 1 needs to be addressed 
     if letter < 16:
         led_1_expander.pin_mode(LED_1_PINS[letter], PinModes.OUTPUT)
         led_1_expander.write_pin(LED_1_PINS[letter], HIGH)
         sleep(1)
         led_1_expander.write_pin(LED_1_PINS[letter], LOW)
+    # If SX1509 number 2 needs to be addressed
     elif letter > 15:
         letter -= 16
         led_2_expander.pin_mode(LED_2_PINS[letter], PinModes.OUTPUT)
@@ -245,7 +220,7 @@ def illuminate_lampboard(letter):
         sleep(1)
         led_2_expander.write_pin(LED_2_PINS[letter], LOW)
 
-
+    # Reset LEDS
     led_1_expander.reset()
 
 
@@ -255,9 +230,10 @@ def main():
     rotors_selected = rotor_selection()
     setting_selected = ring_setting_selection()
     positions_selected = starter_positions_selection()
-    print(rotors_selected)
-    print(setting_selected)
-    print(positions_selected)
+    
+    rotor1_pos = positions_selected[0]
+    rotor2_pos = positions_selected[1]
+    rotor3_pos = positions_selected[2]
 
     # Define rotors from dictionary
     rotor_1 = all_rotors[rotors_selected[0]]
@@ -265,30 +241,43 @@ def main():
     rotor_3 = all_rotors[rotors_selected[2]]
 
     # Initialise rotors
-    initialise_rotor_position(rotor_1, positions_selected[0])
-    initialise_rotor_position(rotor_2, positions_selected[1])
-    initialise_rotor_position(rotor_3, positions_selected[2])
+    initialise_rotor_position(rotor_1, rotor1_pos)
+    initialise_rotor_position(rotor_2, rotor2_pos)
+    initialise_rotor_position(rotor_3, rotor3_pos)
 
     # Initialise ring settings
     initialise_ring_setting(rotor_1, setting_selected[0])
     initialise_ring_setting(rotor_2, setting_selected[1])
     initialise_ring_setting(rotor_3, setting_selected[2])
 
-    # rotor_1 = all_rotors[0]
-    # rotor_2 = all_rotors[1]
-    # rotor_3 = all_rotors[2]
-
+    lcd.clear()
+    lcd.move_to(0, 1)
+    lcd.putstr(f"   {rotor1_pos:02}  {rotor2_pos:02}  {rotor3_pos:02}   ")
     while True:
         sleep(1)
+        # Detect keypress
         letter = detect_keypress()
-        print(letter)
+        # If the letter is real
         if letter != "Empty":
             letter = alphabet[letter]
-            print(letter)
+            # Encypt the letter, then turn it into index
             encrypted_letter = encrypt(letter, rotor_1, rotor_2, rotor_3)
-            print(encrypted_letter)
             encrypted_letter = alphabet.index(encrypted_letter)
+            # Illuminate corresponding index on Lampboard
             illuminate_lampboard(encrypted_letter)
 
+            # Move rotor display on RCI after every keypress
+            if result == 1:
+                rotor2_pos += 1
+            elif result == 2:
+                rotor2_pos += 1
+                rotor1_pos += 1
+            else:
+                rotor3_pos += 1
+                if rotor3_pos > 26:
+                    rotor3_pos = 0
+            lcd.clear()
+            lcd.move_to(0, 1)
+            lcd.putstr(f"   {rotor1_pos:02}  {rotor2_pos:02}  {rotor3_pos:02}   ")            
 
 main()
