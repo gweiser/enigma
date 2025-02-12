@@ -1,3 +1,5 @@
+"""Main script"""
+
 from time import sleep_ms, sleep
 from machine import I2C, Pin  # type: ignore
 from sx1509 import Expander, PinModes, HIGH, LOW

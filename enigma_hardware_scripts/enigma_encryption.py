@@ -1,4 +1,4 @@
-"""Enigma I (no plugboard)"""
+"""Enigma I emulation (no plugboard)"""
 # Result variable for telling Rotor Config Interface (hardware) if rotor positon needs to be advanced on LCD
 result = 0
 # Alphabet reference
