@@ -1,1 +1,0 @@
-<img src="/images/Finished Enigma.jpg" width="820" height="700">
